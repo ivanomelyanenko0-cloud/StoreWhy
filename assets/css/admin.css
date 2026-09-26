@@ -1,0 +1,29 @@
+.stwy-actions {
+	margin: 12px 0 4px;
+}
+
+.stwy-days th.num,
+.stwy-days td.num,
+.stwy-top th.num,
+.stwy-top td.num {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.stwy-days td:first-child {
+	white-space: nowrap;
+}
+
+.stwy-days details summary {
+	cursor: pointer;
+	color: #2271b1;
+}
+
+.stwy-days details ul {
+	margin: 6px 0 0 16px;
+	list-style: disc;
+}
+
+.stwy-muted {
+	color: #8c8f94;
+}
