@@ -369,9 +369,10 @@ function cljournal_on_wmguru_settings( $old_value, $value ) {
 add_action( 'update_option_wmguru_settings', 'cljournal_on_wmguru_settings', 10, 2 );
 
 /**
- * Tillkeeper Pro: every new write entry in its audit log becomes an event.
- * The free plugin's log only holds reads, which change nothing, so it is
- * deliberately not observed.
+ * Tillkeeper: every agent change that actually ran (directly, after a
+ * preview, or once a person approved it) becomes an event. Reads, previews
+ * and requests still waiting for approval changed nothing, so they are
+ * skipped.
  *
  * @param mixed $old_value Previous log.
  * @param mixed $value     New log.
@@ -389,21 +390,36 @@ function cljournal_on_tillkeeper_log( $old_value, $value ) {
 	}
 
 	foreach ( $value as $entry ) {
-		if ( ! is_array( $entry ) || ! isset( $entry['id'] ) || isset( $seen[ (string) $entry['id'] ] ) || empty( $entry['success'] ) ) {
+		if ( ! is_array( $entry ) || ! isset( $entry['id'] ) || isset( $seen[ (string) $entry['id'] ] ) ) {
+			continue;
+		}
+		if ( ! isset( $entry['kind'], $entry['outcome'] ) || 'write' !== $entry['kind'] || ! in_array( $entry['outcome'], array( 'ok', 'applied', 'approved' ), true ) ) {
 			continue;
 		}
 		cljournal_record(
 			'tillkeeper',
 			'agent_write',
 			array(
-				'object_type' => isset( $entry['object_type'] ) ? (string) $entry['object_type'] : 'site',
+				'object_type' => isset( $entry['object_type'] ) && '' !== $entry['object_type'] ? (string) $entry['object_type'] : 'site',
 				'object_id'   => isset( $entry['object_id'] ) ? (int) $entry['object_id'] : 0,
 				'data'        => array(
-					'ability' => isset( $entry['ability'] ) ? (string) $entry['ability'] : '',
-					'risk'    => isset( $entry['risk_class'] ) ? (string) $entry['risk_class'] : '',
+					'ability'  => isset( $entry['ability'] ) ? (string) $entry['ability'] : '',
+					'approved' => 'approved' === $entry['outcome'],
 				),
 			)
 		);
 	}
 }
-add_action( 'update_option_tlkpp_audit_log', 'cljournal_on_tillkeeper_log', 10, 2 );
+add_action( 'update_option_tlkp_activity_log', 'cljournal_on_tillkeeper_log', 10, 2 );
+
+/**
+ * The first write after install or after the log was cleared creates the
+ * option instead of updating it.
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  New log.
+ */
+function cljournal_on_tillkeeper_log_added( $option, $value ) {
+	cljournal_on_tillkeeper_log( array(), $value );
+}
+add_action( 'add_option_tlkp_activity_log', 'cljournal_on_tillkeeper_log_added', 10, 2 );
