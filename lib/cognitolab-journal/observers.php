@@ -369,14 +369,14 @@ function cljournal_on_wmguru_settings( $old_value, $value ) {
 add_action( 'update_option_wmguru_settings', 'cljournal_on_wmguru_settings', 10, 2 );
 
 /**
- * AgentWarden Pro: every new write entry in its audit log becomes an event.
+ * Tillkeeper Pro: every new write entry in its audit log becomes an event.
  * The free plugin's log only holds reads, which change nothing, so it is
  * deliberately not observed.
  *
  * @param mixed $old_value Previous log.
  * @param mixed $value     New log.
  */
-function cljournal_on_agentwarden_log( $old_value, $value ) {
+function cljournal_on_tillkeeper_log( $old_value, $value ) {
 	if ( ! is_array( $value ) ) {
 		return;
 	}
@@ -393,7 +393,7 @@ function cljournal_on_agentwarden_log( $old_value, $value ) {
 			continue;
 		}
 		cljournal_record(
-			'agentwarden',
+			'tillkeeper',
 			'agent_write',
 			array(
 				'object_type' => isset( $entry['object_type'] ) ? (string) $entry['object_type'] : 'site',
@@ -406,4 +406,4 @@ function cljournal_on_agentwarden_log( $old_value, $value ) {
 		);
 	}
 }
-add_action( 'update_option_agwdp_audit_log', 'cljournal_on_agentwarden_log', 10, 2 );
+add_action( 'update_option_tlkpp_audit_log', 'cljournal_on_tillkeeper_log', 10, 2 );

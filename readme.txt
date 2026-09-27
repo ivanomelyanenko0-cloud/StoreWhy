@@ -16,7 +16,7 @@ Most reports tell you *what* happened: sales went down on Tuesday. StoreWhy puts
 
 * **Daily store metrics:** orders, revenue, product views, add-to-cart.
 * **Per-product numbers** and a simple views-to-purchase rate.
-* **Change timeline** for WordPress and WooCommerce, plus Heralda bars, ProofBlocks blocks, Watermark Guru and AgentWarden Pro when they are installed.
+* **Change timeline** for WordPress and WooCommerce, plus Heralda bars, ProofBlocks blocks, Watermark Guru and Tillkeeper Pro when they are installed.
 * **Anonymous by design.** Views are counted without cookies and without storing anything about the visitor. Store staff are not counted.
 * **Works with page caching.** Views are counted by a tiny script, so cached pages are counted too.
 

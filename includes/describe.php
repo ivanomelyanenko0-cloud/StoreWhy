@@ -99,7 +99,7 @@ function stwy_describe_event( array $row ) {
 			/* translators: %s: list of setting names. */
 			return sprintf( __( 'Watermark settings changed (%s)', 'storewhy' ), $fields );
 
-		case 'agentwarden/agent_write':
+		case 'tillkeeper/agent_write':
 			/* translators: 1: ability name, 2: object. */
 			return sprintf( __( 'AI agent change via %1$s on %2$s', 'storewhy' ), $get( 'ability' ), $title );
 	}
