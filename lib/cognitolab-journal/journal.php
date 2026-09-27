@@ -231,6 +231,7 @@ function cljournal_flush() {
  *     @type string $source      Limit to one source.
  *     @type string $object_type Limit to one object type.
  *     @type int    $object_id   Limit to one object (needs object_type).
+ *     @type string[] $events     Limit to 'source/event' pairs.
  *     @type int    $limit       Default 100, max 500.
  *     @type int    $offset      Default 0.
  * }
@@ -254,6 +255,20 @@ function cljournal_query( $args = array() ) {
 	if ( ! empty( $args['source'] ) ) {
 		$where[] = 'source = %s';
 		$vals[]  = sanitize_key( $args['source'] );
+	}
+	if ( ! empty( $args['events'] ) && is_array( $args['events'] ) ) {
+		$pairs = array();
+		foreach ( $args['events'] as $pair ) {
+			$parts = explode( '/', (string) $pair, 2 );
+			if ( 2 === count( $parts ) ) {
+				$pairs[] = '(source = %s AND event = %s)';
+				$vals[]  = sanitize_key( $parts[0] );
+				$vals[]  = sanitize_key( $parts[1] );
+			}
+		}
+		if ( $pairs ) {
+			$where[] = '(' . implode( ' OR ', $pairs ) . ')';
+		}
 	}
 	if ( ! empty( $args['object_type'] ) ) {
 		$where[] = 'object_type = %s';
