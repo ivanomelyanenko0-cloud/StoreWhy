@@ -61,10 +61,30 @@ function stwy_bar_path( $x, $y, $w, $base ) {
 }
 
 /**
- * @param array[] $store  Store rows keyed by 'Y-m-d', newest first.
- * @param array[] $events Journal rows grouped by 'Y-m-d'.
+ * @param array[] $store  Rows keyed by 'Y-m-d' (a day, or the first day of a week), newest first.
+ * @param array[] $events Journal rows grouped by the same keys.
+ * @param array   $args   {
+ *     Optional.
+ *
+ *     @type string $unit   'day' (default) or 'week'.
+ *     @type array  $titles Chart titles keyed 'revenue' and 'views'.
+ * }
  */
-function stwy_render_charts( array $store, array $events ) {
+function stwy_render_charts( array $store, array $events, array $args = array() ) {
+	$unit = isset( $args['unit'] ) && 'week' === $args['unit'] ? 'week' : 'day';
+	$titles = array_merge(
+		'week' === $unit
+			? array(
+				'revenue' => __( 'Revenue per week', 'storewhy' ),
+				'views'   => __( 'Product views per week', 'storewhy' ),
+			)
+			: array(
+				'revenue' => __( 'Revenue per day', 'storewhy' ),
+				'views'   => __( 'Product views per day', 'storewhy' ),
+			),
+		isset( $args['titles'] ) && is_array( $args['titles'] ) ? $args['titles'] : array()
+	);
+
 	$days = array_reverse( $store, true );
 	$n    = count( $days );
 	if ( ! $n ) {
@@ -77,14 +97,14 @@ function stwy_render_charts( array $store, array $events ) {
 	$series = array(
 		array(
 			'key'    => 'revenue',
-			'title'  => __( 'Revenue per day', 'storewhy' ),
+			'title'  => $titles['revenue'],
 			'format' => static function ( $v ) {
 				return html_entity_decode( wp_strip_all_tags( wc_price( $v ) ), ENT_QUOTES, 'UTF-8' );
 			},
 		),
 		array(
 			'key'    => 'views',
-			'title'  => __( 'Product views per day', 'storewhy' ),
+			'title'  => $titles['views'],
 			'format' => static function ( $v ) {
 				return number_format_i18n( (int) $v );
 			},
@@ -112,12 +132,16 @@ function stwy_render_charts( array $store, array $events ) {
 					<?php foreach ( $days as $day => $row ) : ?>
 						<?php
 						$x0      = STWY_CHART_LEFT + $i * $band;
-						$bar_w   = min( 24, $band - 4 );
+						$bar_w   = max( 1.5, min( 24, $band * 0.7 ) );
 						$bx      = $x0 + ( $band - $bar_w ) / 2;
 						$value   = (float) $row[ $s['key'] ];
 						$y       = $base - $value * $scale;
 						$changes = isset( $events[ $day ] ) ? $events[ $day ] : array();
 						$label   = wp_date( get_option( 'date_format' ), strtotime( $day . ' 12:00:00' ) );
+						if ( 'week' === $unit ) {
+							/* translators: %s: date the week starts. */
+							$label = sprintf( __( 'Week of %s', 'storewhy' ), $label );
+						}
 						$tip     = $label . ': ' . call_user_func( $s['format'], $value );
 						if ( $changes ) {
 							/* translators: %d: number of changes on the site that day. */
@@ -144,14 +168,15 @@ function stwy_render_charts( array $store, array $events ) {
 			</figure>
 		<?php endforeach; ?>
 
+		<?php $step = max( 5, (int) ceil( $n / 7 ) ); ?>
 		<div class="stwy-xaxis" style="padding-left: <?php echo esc_attr( round( 100 * STWY_CHART_LEFT / STWY_CHART_W, 2 ) ); ?>%; padding-right: <?php echo esc_attr( round( 100 * STWY_CHART_RIGHT / STWY_CHART_W, 2 ) ); ?>%;">
 			<?php $i = 0; ?>
 			<?php foreach ( array_keys( $days ) as $day ) : ?>
-				<span><?php echo ( 0 === $i % 5 || $i === $n - 1 ) ? esc_html( wp_date( 'j M', strtotime( $day . ' 12:00:00' ) ) ) : ''; ?></span>
+				<span><?php echo ( 0 === $i % $step || $i === $n - 1 ) ? esc_html( wp_date( 'j M', strtotime( $day . ' 12:00:00' ) ) ) : ''; ?></span>
 				<?php ++$i; ?>
 			<?php endforeach; ?>
 		</div>
-		<p class="stwy-legend"><span class="stwy-legend-change"></span> <?php esc_html_e( 'Something changed on the site that day (number of changes). Hover a day for details; the table below lists every change.', 'storewhy' ); ?></p>
+		<p class="stwy-legend"><span class="stwy-legend-change"></span> <?php echo esc_html( 'week' === $unit ? __( 'Something changed on the site that week (number of changes). Hover a bar for details.', 'storewhy' ) : __( 'Something changed on the site that day (number of changes). Hover a day for details.', 'storewhy' ) ); ?></p>
 	</div>
 	<?php
 }

@@ -135,6 +135,11 @@ function stwy_render_admin_page() {
 		<?php endif; ?>
 
 		<h2><?php esc_html_e( 'Last 30 days', 'storewhy' ); ?></h2>
+		<?php if ( defined( 'STWYP_VERSION' ) ) : ?>
+			<p><a href="<?php echo esc_url( admin_url( 'admin.php?page=storewhy-insights' ) ); ?>"><?php esc_html_e( 'Open Insights: what stood out, by product and category, over up to 12 months →', 'storewhy' ); ?></a></p>
+		<?php else : ?>
+			<p class="description"><?php esc_html_e( 'StoreWhy Pro spots unusual days for each product and category over up to 12 months and lists what changed around them.', 'storewhy' ); ?></p>
+		<?php endif; ?>
 		<?php stwy_render_charts( $store, $events ); ?>
 		<table class="widefat striped stwy-days">
 			<thead>
