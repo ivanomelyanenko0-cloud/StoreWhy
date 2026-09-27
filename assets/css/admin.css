@@ -27,3 +27,78 @@
 .stwy-muted {
 	color: #8c8f94;
 }
+
+.stwy-charts {
+	--stwy-series: #2a78d6;
+	--stwy-ink: #1d2327;
+	--stwy-ink-muted: #646970;
+	--stwy-grid: #e0e0e0;
+	--stwy-change: #4a3aa7;
+	max-width: 1100px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	padding: 12px 16px 8px;
+	margin-bottom: 16px;
+}
+
+.stwy-chart {
+	margin: 0 0 4px;
+}
+
+.stwy-chart figcaption {
+	font-weight: 600;
+	color: var(--stwy-ink);
+	margin-bottom: 2px;
+}
+
+.stwy-chart svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.stwy-grid { stroke: var(--stwy-grid); stroke-width: 1; }
+.stwy-axis { stroke: #a7aaad; stroke-width: 1; }
+.stwy-tick { fill: var(--stwy-ink-muted); font-size: 12px; }
+.stwy-bar { fill: var(--stwy-series); }
+.stwy-hit { fill: transparent; }
+.stwy-day:hover .stwy-hit { fill: rgba(0, 0, 0, 0.04); }
+.stwy-change { stroke: var(--stwy-change); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.stwy-marker { fill: var(--stwy-change); stroke: #fff; stroke-width: 2; }
+.stwy-marker-count { fill: #fff; font-size: 11px; font-weight: 600; }
+
+.stwy-xaxis {
+	display: flex;
+	color: var(--stwy-ink-muted);
+	font-size: 12px;
+}
+
+.stwy-xaxis span {
+	flex: 1 1 0;
+	white-space: nowrap;
+	overflow: visible;
+}
+
+.stwy-legend {
+	color: var(--stwy-ink-muted);
+	font-size: 12px;
+	margin: 8px 0 0;
+}
+
+.stwy-legend-change {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: var(--stwy-change);
+	vertical-align: -2px;
+}
+
+.stwy-days tr.stwy-has-changes td:first-child {
+	box-shadow: inset 3px 0 0 #4a3aa7;
+}
+
+@media (forced-colors: active) {
+	.stwy-bar { fill: CanvasText; }
+	.stwy-change, .stwy-marker { stroke: Highlight; fill: Highlight; }
+}

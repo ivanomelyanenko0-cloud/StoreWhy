@@ -52,6 +52,20 @@ function stwy_handle_rebuild() {
 add_action( 'admin_post_stwy_rebuild', 'stwy_handle_rebuild' );
 
 /**
+ * Saves settings.
+ */
+function stwy_handle_settings() {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		wp_die( esc_html__( 'You are not allowed to do this.', 'storewhy' ) );
+	}
+	check_admin_referer( 'stwy_settings' );
+	stwy_update_settings( array( 'track_views' => ! empty( $_POST['track_views'] ) ) );
+	wp_safe_redirect( add_query_arg( array( 'page' => 'storewhy', 'stwy_saved' => 1 ), admin_url( 'admin.php' ) ) );
+	exit;
+}
+add_action( 'admin_post_stwy_settings', 'stwy_handle_settings' );
+
+/**
  * @param int $days Days back.
  * @return array[] Journal rows grouped by local 'Y-m-d'.
  */
@@ -89,6 +103,15 @@ function stwy_render_admin_page() {
 	$top    = stwy_top_products( $days, 10 );
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only notice after a nonce-checked redirect.
 	$queued = isset( $_GET['stwy_queued'] ) ? absint( $_GET['stwy_queued'] ) : null;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only notice after a nonce-checked redirect.
+	$saved    = ! empty( $_GET['stwy_saved'] );
+	$settings = stwy_get_settings();
+	$has_data = (bool) array_filter(
+		$store,
+		static function ( $row ) {
+			return (int) $row['orders'] || (int) $row['views'] || (int) $row['add_to_cart'];
+		}
+	);
 	?>
 	<div class="wrap stwy-wrap">
 		<h1><?php esc_html_e( 'StoreWhy', 'storewhy' ); ?></h1>
@@ -103,13 +126,16 @@ function stwy_render_admin_page() {
 			</p></div>
 		<?php endif; ?>
 
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="stwy-actions">
-			<input type="hidden" name="action" value="stwy_rebuild" />
-			<?php wp_nonce_field( 'stwy_rebuild' ); ?>
-			<?php submit_button( __( 'Rebuild last 30 days from orders', 'storewhy' ), 'secondary', 'submit', false ); ?>
-		</form>
+		<?php if ( $saved ) : ?>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'storewhy' ); ?></p></div>
+		<?php endif; ?>
+
+		<?php if ( ! $has_data ) : ?>
+			<div class="notice notice-info"><p><?php esc_html_e( 'StoreWhy is filling in the last 30 days from your orders in the background. Numbers appear here within a few minutes; product views start counting from today.', 'storewhy' ); ?></p></div>
+		<?php endif; ?>
 
 		<h2><?php esc_html_e( 'Last 30 days', 'storewhy' ); ?></h2>
+		<?php stwy_render_charts( $store, $events ); ?>
 		<table class="widefat striped stwy-days">
 			<thead>
 				<tr>
@@ -124,7 +150,7 @@ function stwy_render_admin_page() {
 			<tbody>
 				<?php foreach ( $store as $day => $row ) : ?>
 					<?php $day_events = isset( $events[ $day ] ) ? $events[ $day ] : array(); ?>
-					<tr>
+					<tr class="<?php echo $day_events ? 'stwy-has-changes' : ''; ?>">
 						<td><?php echo esc_html( wp_date( 'D, ' . get_option( 'date_format' ), strtotime( $day . ' 12:00:00' ) ) ); ?></td>
 						<td class="num"><?php echo esc_html( number_format_i18n( (int) $row['orders'] ) ); ?></td>
 						<td class="num"><?php echo wp_kses_post( wc_price( (float) $row['revenue'] ) ); ?></td>
@@ -187,6 +213,20 @@ function stwy_render_admin_page() {
 				</tbody>
 			</table>
 		<?php endif; ?>
+
+		<h2><?php esc_html_e( 'Settings', 'storewhy' ); ?></h2>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<input type="hidden" name="action" value="stwy_settings" />
+			<?php wp_nonce_field( 'stwy_settings' ); ?>
+			<p><label><input type="checkbox" name="track_views" value="1" <?php checked( $settings['track_views'] ); ?> /> <?php esc_html_e( 'Count product page views (anonymous: no cookies, nothing stored about visitors)', 'storewhy' ); ?></label></p>
+			<?php submit_button( __( 'Save settings', 'storewhy' ), 'primary', 'submit', false ); ?>
+		</form>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="stwy-actions">
+			<input type="hidden" name="action" value="stwy_rebuild" />
+			<?php wp_nonce_field( 'stwy_rebuild' ); ?>
+			<p class="description"><?php esc_html_e( 'Numbers update automatically when orders change. If something looks off, recount the last 30 days from your orders:', 'storewhy' ); ?></p>
+			<?php submit_button( __( 'Recount last 30 days', 'storewhy' ), 'secondary', 'submit', false ); ?>
+		</form>
 	</div>
 	<?php
 }

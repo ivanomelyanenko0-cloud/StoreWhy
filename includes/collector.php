@@ -65,3 +65,44 @@ function stwy_queue_rebuild( $days = 30 ) {
 	}
 	return $queued;
 }
+
+/**
+ * Queues a recount of one day, unless one is already waiting.
+ *
+ * @param string $day 'Y-m-d'.
+ */
+function stwy_queue_day( $day ) {
+	if ( function_exists( 'as_enqueue_async_action' ) && ! as_has_scheduled_action( 'stwy_collect_day', array( $day ), STWY_AS_GROUP ) ) {
+		as_enqueue_async_action( 'stwy_collect_day', array( $day ), STWY_AS_GROUP );
+	}
+}
+
+/**
+ * Keeps the numbers current without waiting for the nightly run: any new
+ * order, status change or refund re-counts the day the order was placed.
+ *
+ * @param int $order_id Order ID.
+ */
+function stwy_on_order_changed( $order_id ) {
+	$order = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : false;
+	if ( ! $order || ! $order->get_date_created() ) {
+		return;
+	}
+	stwy_queue_day( wp_date( 'Y-m-d', $order->get_date_created()->getTimestamp() ) );
+}
+add_action( 'woocommerce_new_order', 'stwy_on_order_changed' );
+add_action( 'woocommerce_order_status_changed', 'stwy_on_order_changed' );
+add_action( 'woocommerce_order_refunded', 'stwy_on_order_changed' );
+
+/**
+ * The first time an admin opens the dashboard after installing, the last
+ * 30 days are filled in from existing orders.
+ */
+function stwy_first_run_backfill() {
+	if ( get_option( 'stwy_backfilled' ) || ! function_exists( 'as_enqueue_async_action' ) || (int) get_option( 'stwy_db_version', 0 ) < 1 ) {
+		return;
+	}
+	stwy_queue_rebuild( 30 );
+	update_option( 'stwy_backfilled', time(), false );
+}
+add_action( 'admin_init', 'stwy_first_run_backfill' );

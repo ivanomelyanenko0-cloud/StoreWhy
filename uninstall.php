@@ -19,6 +19,8 @@ function stwy_uninstall_site() {
 	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- dropping this plugin's own tables on uninstall.
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}stwy_daily" );
 	delete_option( 'stwy_db_version' );
+	delete_option( 'stwy_settings' );
+	delete_option( 'stwy_backfilled' );
 
 	if ( function_exists( 'as_unschedule_all_actions' ) ) {
 		as_unschedule_all_actions( '', array(), 'storewhy' );

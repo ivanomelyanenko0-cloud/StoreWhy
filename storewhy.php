@@ -3,7 +3,7 @@
  * Plugin Name:          StoreWhy
  * Plugin URI:           https://cognitolab.net/products/storewhy
  * Description:          WooCommerce numbers that come with context: daily sales, views and add-to-cart next to what changed on your site that day.
- * Version:              0.1.0
+ * Version:              1.0.0
  * Requires at least:    6.3
  * Requires PHP:         7.4
  * Author:               CognitoLab
@@ -15,16 +15,15 @@
  * Requires Plugins:     woocommerce
  * WC requires at least: 8.0
  *
- * "StoreWhy" is a working name - every internal identifier lives behind the
- * STWY_/stwy_ prefix so a rename stays a mechanical find/replace. The shared
- * change journal uses the company prefix (cljournal_) and is not renamed.
+ * Internal identifiers use the STWY_/stwy_ prefix. The shared change journal
+ * uses the company prefix (cljournal_).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'STWY_VERSION', '0.1.0' );
+define( 'STWY_VERSION', '1.0.0' );
 define( 'STWY_PLUGIN_FILE', __FILE__ );
 define( 'STWY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'STWY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -32,10 +31,12 @@ define( 'STWY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 require_once STWY_PLUGIN_DIR . 'lib/cognitolab-journal/loader.php';
 cljournal_register_consumer( 'storewhy' );
 
+require_once STWY_PLUGIN_DIR . 'includes/settings.php';
 require_once STWY_PLUGIN_DIR . 'includes/metrics.php';
 require_once STWY_PLUGIN_DIR . 'includes/collector.php';
 require_once STWY_PLUGIN_DIR . 'includes/tracking.php';
 require_once STWY_PLUGIN_DIR . 'includes/describe.php';
+require_once STWY_PLUGIN_DIR . 'includes/chart.php';
 require_once STWY_PLUGIN_DIR . 'includes/admin-page.php';
 
 /**
