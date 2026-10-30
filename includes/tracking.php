@@ -55,6 +55,8 @@ function stwy_register_rest_routes() {
 		array(
 			'methods'             => 'POST',
 			'callback'            => 'stwy_rest_view',
+			// Public on purpose: logged-out visitors' browsers report the view. The callback only accepts
+			// same-site requests from non-bots, caps views per product per minute, and stores a counter only.
 			'permission_callback' => '__return_true',
 			'args'                => array(
 				'product_id' => array(

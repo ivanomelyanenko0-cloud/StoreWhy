@@ -65,7 +65,7 @@ StoreWhy's daily numbers are removed. The change timeline is shared with other C
 == Screenshots ==
 
 1. Revenue and product views per day, with markers on days something changed on the site.
-2. The day-by-day table: a sales dip next to the changes made that day.
+2. The day-by-day table: a drop in views and sales next to the change made that day.
 3. Top products with the views-to-purchase rate, and settings.
 
 == Changelog ==
