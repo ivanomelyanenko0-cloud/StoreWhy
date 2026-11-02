@@ -1,6 +1,6 @@
 === StoreWhy ===
 Contributors: lukystile
-Tags: woocommerce, analytics, reports, sales, activity log
+Tags: woocommerce analytics, sales report, woocommerce reports, product views, analytics
 Requires at least: 6.3
 Tested up to: 7.1
 Stable tag: 1.0.0
@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-WooCommerce numbers with context: daily sales, views and add-to-cart next to what changed on your site that day.
+WooCommerce analytics with context: daily sales, product views and add-to-cart in one report, next to what changed on your site that day.
 
 == Description ==
 
-Most reports tell you *what* happened: sales went down on Tuesday. StoreWhy puts your numbers next to *what changed on your site* that day, so the likely reason is right there: a promo banner was removed, a free-shipping bar was switched off, a product went out of stock, a price changed, a plugin was updated.
+Most reports tell you *what* happened: sales went down on Tuesday. **StoreWhy**, a WooCommerce analytics and sales report plugin, puts your numbers next to *what changed on your site* that day, so the likely reason is right there: a promo banner was removed, a free-shipping bar was switched off, a product went out of stock, a price changed, a plugin was updated.
 
 * **Two simple charts** for the last 30 days: revenue and product views per day, with a marker on every day something changed on the site.
 * **Day-by-day table** with orders, revenue, product views, add-to-cart, and the list of changes for that day.
@@ -41,6 +41,10 @@ This plugin does not connect to any external service. All numbers are calculated
 2. Open **WooCommerce → StoreWhy**. The last 30 days are filled in from your orders within a few minutes; product views start counting from the moment you activate the plugin.
 
 == Frequently Asked Questions ==
+
+= Why did my WooCommerce sales drop? =
+
+Open **WooCommerce → StoreWhy** and find the day the numbers changed. The day-by-day table shows orders, revenue, product views and add-to-cart next to everything that changed on the site that day, such as a price change, a product going out of stock, a removed promo banner or a plugin update. StoreWhy shows what changed around the drop; deciding whether it caused it is up to you.
 
 = Where do the order numbers come from? =
 
