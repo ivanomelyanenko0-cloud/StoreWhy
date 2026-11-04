@@ -344,7 +344,7 @@ function cljournal_record_block_diff( $post_id, $post, array $before, array $aft
  */
 
 /**
- * Watermark Guru: record which settings changed, not their values.
+ * Filigrane: record which settings changed, not their values.
  *
  * @param mixed $old_value Previous settings.
  * @param mixed $value     New settings.
@@ -363,7 +363,7 @@ function cljournal_on_wmguru_settings( $old_value, $value ) {
 	}
 
 	if ( $changed ) {
-		cljournal_record( 'watermark-guru', 'settings_changed', array( 'data' => array( 'fields' => $changed ) ) );
+		cljournal_record( 'filigrane', 'settings_changed', array( 'data' => array( 'fields' => $changed ) ) );
 	}
 }
 add_action( 'update_option_wmguru_settings', 'cljournal_on_wmguru_settings', 10, 2 );

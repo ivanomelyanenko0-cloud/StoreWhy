@@ -18,7 +18,7 @@ Most reports tell you *what* happened: sales went down on Tuesday. **StoreWhy**,
 * **Day-by-day table** with orders, revenue, product views, add-to-cart, and the list of changes for that day.
 * **Top products** with views, add-to-cart, units sold, revenue and a views-to-purchase rate.
 * **A change timeline, recorded automatically:** products published or taken offline, price, sale price and stock status changes, plugin and theme activations, switches and updates, pages published or taken offline.
-* **More detail with other CognitoLab plugins:** Heralda bars switched on or off or rescheduled, ProofBlocks banners, counters and pricing tables added to or removed from live pages, Watermark Guru setting changes, and changes AI agents made through Tillkeeper. Nothing extra to set up: if those plugins are active, their changes show up.
+* **More detail with other CognitoLab plugins:** Heralda bars switched on or off or rescheduled, ProofBlocks banners, counters and pricing tables added to or removed from live pages, Filigrane setting changes, and changes AI agents made through Tillkeeper. Nothing extra to set up: if those plugins are active, their changes show up.
 * **Always up to date.** A new order, a status change or a refund recounts that day in the background. On first use StoreWhy fills in the last 30 days from your existing orders.
 
 = Private by design =

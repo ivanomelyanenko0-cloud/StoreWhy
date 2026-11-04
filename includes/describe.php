@@ -94,7 +94,7 @@ function stwy_describe_event( array $row ) {
 			/* translators: 1: block name, 2: page title. */
 			return sprintf( __( 'ProofBlocks %1$s removed from "%2$s"', 'storewhy' ), stwy_block_label( $get( 'block' ) ), $title );
 
-		case 'watermark-guru/settings_changed':
+		case 'filigrane/settings_changed':
 			$fields = isset( $data['fields'] ) && is_array( $data['fields'] ) ? implode( ', ', array_map( 'strval', $data['fields'] ) ) : '';
 			/* translators: %s: list of setting names. */
 			return sprintf( __( 'Watermark settings changed (%s)', 'storewhy' ), $fields );
