@@ -1,4 +1,4 @@
-=== StoreWhy ===
+=== StoreWhy – Sales Analytics & Change Timeline for WooCommerce ===
 Contributors: lukystile
 Tags: woocommerce analytics, sales report, woocommerce reports, product views, analytics
 Requires at least: 6.3

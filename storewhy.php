@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:          StoreWhy
+ * Plugin Name:          StoreWhy – Sales Analytics & Change Timeline for WooCommerce
  * Plugin URI:           https://cognitolab.net/products/storewhy
  * Description:          WooCommerce numbers that come with context: daily sales, views and add-to-cart next to what changed on your site that day.
  * Version:              1.0.0
